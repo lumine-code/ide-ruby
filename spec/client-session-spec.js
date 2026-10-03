@@ -1,6 +1,6 @@
 const { createProject, prepareProject, removeProject, position } = require("./helpers/project");
-const { findOnPath } = require("../lib/server");
-const runtime = process.env.RUBY_LSP_RUBY_PATH || findOnPath("ruby");
+const { resolveLiveRuntime } = require("./helpers/live-runtime");
+const runtime = resolveLiveRuntime();
 const liveSuite = runtime ? describe : xdescribe;
 const until = async (check, label) => {
   const deadline = Date.now() + 90000;

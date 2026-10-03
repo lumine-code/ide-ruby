@@ -1,4 +1,4 @@
-const { findOnPath } = require("../lib/server");
+const { resolveLiveRuntime } = require("./helpers/live-runtime");
 const { LiveLspClient } = require("./helpers/live-lsp-client");
 const { createProject, prepareProject, removeProject, position } = require("./helpers/project");
 const {
@@ -6,9 +6,7 @@ const {
   exerciseDiagnosticEdits,
   exerciseUnicodeRename,
 } = require("./helpers/exercise-server");
-const runtime = process.env.RUBY_LSP_RUBY_PATH || findOnPath("ruby");
-if (process.env.REQUIRE_RUBY_LSP && !runtime)
-  throw new Error("CI requires Ruby and the real Ruby LSP gem.");
+const runtime = resolveLiveRuntime();
 const liveSuite = runtime ? describe : xdescribe;
 
 liveSuite("ide-ruby real Ruby LSP protocol", () => {
