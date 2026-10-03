@@ -1,0 +1,222 @@
+{
+  "name": "ide-ruby",
+  "author": "lumine-code",
+  "description": "Provide Ruby language intelligence through Ruby LSP.",
+  "repository": "https://github.com/lumine-code/ide-ruby",
+  "bugs": {
+    "url": "https://github.com/lumine-code/ide-ruby/issues"
+  },
+  "keywords": [
+    "bundler",
+    "rubocop",
+    "syntax-tree",
+    "language-server",
+    "lsp",
+    "refactoring"
+  ],
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "lumine": "^1.0.0"
+  },
+  "main": "./lib/main",
+  "files": [
+    "lib",
+    "spec"
+  ],
+  "scripts": {
+    "test": "lumine --test spec",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "consumedServices": {
+    "ide-client": {
+      "versions": {
+        "^1.0.0": "consumeIdeClient"
+      }
+    }
+  },
+  "providedServices": {
+    "background-tips.provider": {
+      "versions": {
+        "1.0.0": "provideBackgroundTips"
+      }
+    }
+  },
+  "specPackages": [
+    "ide-client",
+    "language-ruby"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-n": "^18.4.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "vscode-jsonrpc": "^9.0.3"
+  },
+  "configSchema": {
+    "rubyPath": {
+      "title": "Ruby Path",
+      "description": "Path to the project's Ruby executable. Leave empty to use Ruby on PATH, including active version-manager shims.",
+      "type": "string",
+      "default": ""
+    },
+    "serverPath": {
+      "title": "Server Path",
+      "description": "Path to the Ruby ruby-lsp executable script (without .bat or .cmd). Leave empty to use the managed server, then the selected Ruby's gems.",
+      "type": "string",
+      "default": ""
+    },
+    "notifyWhenMissing": {
+      "title": "Notify When Missing",
+      "description": "Show a notification when Ruby or Ruby LSP cannot be found, offering to install the server.",
+      "type": "boolean",
+      "default": true
+    },
+    "features": {
+      "title": "Features",
+      "description": "Choose which language-server features the editor uses.",
+      "type": "object",
+      "scopeResolution": "grammar",
+      "properties": {
+        "diagnostics": {
+          "title": "Diagnostics",
+          "description": "Report syntax errors and configured linter problems.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "autocomplete": {
+          "title": "Autocomplete",
+          "description": "Offer completions while typing.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "hover": {
+          "title": "Hover",
+          "description": "Show documentation on hover.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "signature": {
+          "title": "Signature Help",
+          "description": "Show method parameters while entering a call.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "definition": {
+          "title": "Go To Definition",
+          "description": "Navigate to definitions.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "references": {
+          "title": "Find References",
+          "description": "Find references to constants and supported symbols.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "typeHierarchy": {
+          "title": "Type Hierarchy",
+          "description": "Inspect superclass and mixin relationships.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "symbols": {
+          "title": "Symbols",
+          "description": "Provide document and workspace symbols.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "format": {
+          "title": "Format",
+          "description": "Format documents, ranges and code entered while typing.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "rename": {
+          "title": "Rename",
+          "description": "Rename constants and update their references.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "codeActions": {
+          "title": "Code Actions",
+          "description": "Offer fixes and refactorings for the selected code.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "inlayHints": {
+          "title": "Inlay Hints",
+          "description": "Annotate implicit rescue classes and shorthand hash values.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        },
+        "semanticTokens": {
+          "title": "Semantic Tokens",
+          "description": "Highlight source code using semantic information.",
+          "type": "boolean",
+          "scopeResolution": "grammar",
+          "default": true
+        }
+      }
+    },
+    "formatter": {
+      "title": "Formatter",
+      "description": "Formatter used by Ruby LSP. Auto detects the project's RuboCop or Syntax Tree dependency; formatters must be in the project bundle.",
+      "type": "string",
+      "enum": [
+        "auto",
+        "rubocop",
+        "rubocop_internal",
+        "syntax_tree",
+        "standard",
+        "rubyfmt",
+        "none"
+      ],
+      "default": "auto"
+    },
+    "linters": {
+      "title": "Linters",
+      "description": "Linter integrations from the project bundle. Leave empty for Ruby LSP's automatic detection; use rubocop_internal for its built-in RuboCop integration.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "inlayHints": {
+      "title": "Inlay Hints",
+      "description": "Which implicit Ruby constructs to annotate. Both are disabled by default, matching Ruby LSP.",
+      "type": "object",
+      "properties": {
+        "implicitRescue": {
+          "title": "Implicit Rescue",
+          "description": "Show the implicit StandardError class on rescue clauses.",
+          "type": "boolean",
+          "default": false
+        },
+        "implicitHashValue": {
+          "title": "Implicit Hash Values",
+          "description": "Show values omitted from shorthand hash entries.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}
