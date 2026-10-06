@@ -1,3 +1,4 @@
+const { resolutionContext } = require("./server-resolution");
 const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
@@ -101,7 +102,9 @@ const createProject = () => {
 };
 const prepareProject = async (fixture, rubyPath, gemHome) => {
   const server = require("../../lib/server");
-  const ruby = await server.resolveRuby(rubyPath, fixture.rootPath);
+  const ruby =
+    (await server.resolveRuby(resolutionContext({ rootPath: fixture.rootPath }), rubyPath))?.data ??
+    null;
   await promisify(execFile)(ruby.command, ["-S", "bundle", "install", "--quiet"], {
     cwd: fixture.rootPath,
     env: { ...process.env, ...server.gemEnvironment(ruby, gemHome) },

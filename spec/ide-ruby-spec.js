@@ -1,3 +1,4 @@
+const { resolutionContext, findOnPath } = require("./helpers/server-resolution");
 const fs = require("node:fs");
 const path = require("node:path");
 const { createProject, removeProject } = require("./helpers/project");
@@ -91,11 +92,34 @@ describe("ide-ruby runtime and gem environment", () => {
   });
   it("skips directories on PATH", () => {
     fs.mkdirSync(path.join(fixture.rootPath, "ruby"));
-    expect(server.findOnPath("ruby", { PATH: fixture.rootPath })).toBeNull();
+    expect(findOnPath("ruby", { PATH: fixture.rootPath })).toBeNull();
   });
   it("rejects invalid explicit paths", async () => {
-    await expectAsync(server.resolveRuby(fixture.rootPath)).toBeRejectedWithError(/file/);
-    await expectAsync(server.resolveRuby(path.join(fixture.rootPath, "missing"))).toBeRejected();
+    await expectAsync(
+      server.resolveRuby(resolutionContext({}), fixture.rootPath),
+    ).toBeRejectedWithError(/file/);
+    await expectAsync(
+      server.resolveRuby(resolutionContext({}), path.join(fixture.rootPath, "missing")),
+    ).toBeRejected();
+  });
+  it("tries later Ruby runtimes after a discovered runtime fails its project validation", async () => {
+    const folders = ["old-ruby", "project-ruby"].map((name) => path.join(fixture.rootPath, name));
+    const native = process.platform === "win32" ? "ruby.exe" : "ruby";
+    for (const folder of folders) {
+      fs.mkdirSync(folder);
+      fs.copyFileSync(process.execPath, path.join(folder, native));
+      fs.chmodSync(path.join(folder, native), 0o755);
+    }
+    spyOn(server, "probeRuby").and.callFake(async (command) => {
+      if (command.startsWith(folders[0])) throw new Error("Project requires Ruby 3.4");
+      return { command, version: "3.4.11" };
+    });
+    const env = { PATH: folders.join(path.delimiter) };
+    const context = resolutionContext({ rootPath: fixture.rootPath });
+    expect((await server.resolveRuby(context, "", env)).path).toBe(path.join(folders[1], native));
+    await expectAsync(
+      server.resolveRuby(context, path.join(folders[0], native)),
+    ).toBeRejectedWithError(/Project requires Ruby/);
   });
   it("prepends private gems and runtime bins while preserving all dependency paths", () => {
     const env = {
@@ -132,39 +156,65 @@ describe("ide-ruby runtime and gem environment", () => {
   });
   it("returns no launch when Ruby is missing", async () => {
     spyOn(server, "resolveRuby").and.resolveTo(null);
-    expect(await server.resolveServer({ rootPath: fixture.rootPath })).toBeNull();
+    expect(
+      await server.resolveServer(resolutionContext({ rootPath: fixture.rootPath }), {}),
+    ).toBeNull();
   });
   if (process.env.RUBY_LSP_RUBY_PATH)
     it("validates the real runtime against a numeric project Ruby version", async () => {
-      const ruby = await server.resolveRuby(process.env.RUBY_LSP_RUBY_PATH, fixture.rootPath);
+      const ruby =
+        (
+          await server.resolveRuby(
+            resolutionContext({ rootPath: fixture.rootPath }),
+            process.env.RUBY_LSP_RUBY_PATH,
+          )
+        )?.data ?? null;
       expect(ruby.version).toMatch(/^\d+\.\d+\.\d+/);
       fs.writeFileSync(path.join(fixture.rootPath, ".ruby-version"), ruby.version);
-      expect((await server.resolveRuby(process.env.RUBY_LSP_RUBY_PATH, fixture.rootPath)).abi).toBe(
-        ruby.abi,
-      );
+      expect(
+        (
+          (
+            await server.resolveRuby(
+              resolutionContext({ rootPath: fixture.rootPath }),
+              process.env.RUBY_LSP_RUBY_PATH,
+            )
+          )?.data ?? null
+        ).abi,
+      ).toBe(ruby.abi);
       fs.writeFileSync(path.join(fixture.rootPath, ".ruby-version"), "99.0.0");
       await expectAsync(
-        server.resolveRuby(process.env.RUBY_LSP_RUBY_PATH, fixture.rootPath),
+        server.resolveRuby(
+          resolutionContext({ rootPath: fixture.rootPath }),
+          process.env.RUBY_LSP_RUBY_PATH,
+        ),
       ).toBeRejectedWithError(/project requires Ruby 99/);
     }, 30000);
   it("refuses native gems built for a different Ruby ABI", async () => {
     const gemHome = path.join(fixture.rootPath, "managed");
     fs.mkdirSync(path.join(gemHome, "bin"), { recursive: true });
+    fs.writeFileSync(path.join(gemHome, "bin", "ruby-lsp"), "# managed script\n");
     fs.writeFileSync(
       path.join(gemHome, "ruby-runtime.json"),
       JSON.stringify({ abi: "3.3.0", platform: "x64-mingw-ucrt" }),
     );
     spyOn(server, "resolveRuby").and.resolveTo({
-      command: process.execPath,
-      abi: "3.4.0",
-      platform: "x64-mingw-ucrt",
-      version: "3.4.11",
+      path: process.execPath,
+      kind: "executable",
+      data: {
+        command: process.execPath,
+        abi: "3.4.0",
+        platform: "x64-mingw-ucrt",
+        version: "3.4.11",
+      },
     });
     await expectAsync(
-      server.resolveServer({
-        rootPath: fixture.rootPath,
-        managedServer: { modulePath: path.join(gemHome, "bin", "ruby-lsp") },
-      }),
+      server.resolveServer(
+        resolutionContext({
+          rootPath: fixture.rootPath,
+          managedServer: { modulePath: path.join(gemHome, "bin", "ruby-lsp") },
+        }),
+        {},
+      ),
     ).toBeRejectedWithError(/Reinstall/);
   });
 });

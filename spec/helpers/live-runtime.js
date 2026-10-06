@@ -1,3 +1,4 @@
+const { findOnPath } = require("./server-resolution");
 const childProcess = require("node:child_process");
 
 // Finding Ruby alone does not make the live suite runnable. Hosted runners may
@@ -22,7 +23,7 @@ puts JSON.generate({ gemPaths: Gem.path, bindir: RbConfig::CONFIG['bindir'] })`;
 
 exports.resolveLiveRuntime = (env = process.env) => {
   const server = require("../../lib/server");
-  const runtime = env.RUBY_LSP_RUBY_PATH || server.findOnPath("ruby", env);
+  const runtime = env.RUBY_LSP_RUBY_PATH || findOnPath("ruby", env);
   const required = env.REQUIRE_RUBY_LSP || env.REQUIRE_RUBY_MANAGED_INSTALL;
   const message = "CI requires Ruby, Bundler, Ruby LSP and the fixture's RuboCop gems.";
   if (!runtime) {
