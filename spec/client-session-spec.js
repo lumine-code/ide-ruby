@@ -75,7 +75,7 @@ liveSuite("ide-ruby actual editor service routing", () => {
     expect(
       await service.activeSessionForFeature(editor, "textDocument/formatting", "format"),
     ).toBeNull();
-    expect(await formatter.formatEntireFile(editor)).toEqual([]);
+    expect(await formatter.formatEntireFile(editor)).toBeNull();
     lumine.config.set("ide-ruby.features.format", true);
     expect(await service.activeSessionForFeature(editor, "textDocument/formatting", "format")).toBe(
       session,
