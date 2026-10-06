@@ -217,4 +217,32 @@ describe("ide-ruby runtime and gem environment", () => {
       ),
     ).toBeRejectedWithError(/Reinstall/);
   });
+  it("uses an explicit script without reading a corrupt managed installation", async () => {
+    const script = path.join(fixture.rootPath, "ruby-lsp");
+    fs.writeFileSync(script, "# configured Ruby script\n");
+    const getManagedServer = jasmine
+      .createSpy("getManagedServer")
+      .and.throwError("Corrupt managed record");
+    const resolver = resolutionContext().resolver;
+    const select = resolver.select;
+    spyOn(resolver, "select").and.callFake(async (options) => {
+      const selected = await select(options);
+      expect(selected.source).toBe("configured");
+      expect(selected.data.gemHome).toBe("");
+      throw new Error("Selected configured script");
+    });
+    spyOn(server, "resolveRuby").and.resolveTo({
+      path: process.execPath,
+      kind: "executable",
+      data: {},
+    });
+    const context = resolutionContext({ ...fixture, getManagedServer, resolver });
+    await expectAsync(server.resolveServer(context, { serverPath: script })).toBeRejectedWithError(
+      "Selected configured script",
+    );
+    expect(getManagedServer).not.toHaveBeenCalled();
+    await expectAsync(server.resolveServer(context)).toBeRejectedWithError(
+      "Corrupt managed record",
+    );
+  });
 });
