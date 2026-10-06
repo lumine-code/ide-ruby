@@ -20,7 +20,7 @@ liveSuite("ide-ruby real Ruby LSP protocol", () => {
       lumine.config.set("ide-ruby.serverPath", process.env.RUBY_LSP_SERVER_PATH);
     lumine.config.set("ide-ruby.inlayHints", { implicitRescue: true, implicitHashValue: true });
     await prepareProject(fixture, runtime, process.env.RUBY_LSP_GEM_HOME);
-    registration = main.consumeIdeClient({
+    registration = main.consumeIde({
       registerAdapter(adapter) {
         client = new LiveLspClient(adapter, fixture.rootPath);
         return { dispose() {} };
@@ -82,10 +82,8 @@ liveSuite("ide-ruby real Ruby LSP protocol", () => {
       await client.stop();
       const managed = createProject();
       try {
-        await lumine.packages.activatePackage("ide-client");
-        const service = lumine.packages
-          .getActivePackage("ide-client")
-          .mainModule.provideIdeClient();
+        await lumine.packages.activatePackage("ide");
+        const service = lumine.packages.getActivePackage("ide").mainModule.provideIde();
         await service.uninstallServer("ide-ruby");
         const installed = await service.installServer("ide-ruby", {
           version: process.env.RUBY_LSP_VERSION || "0.26.11",
@@ -102,11 +100,9 @@ liveSuite("ide-ruby real Ruby LSP protocol", () => {
         expect(symbols.some(({ name }) => name === "Calculator")).toBe(true);
       } finally {
         await client.stop();
-        const service = lumine.packages
-          .getActivePackage("ide-client")
-          ?.mainModule.provideIdeClient();
+        const service = lumine.packages.getActivePackage("ide")?.mainModule.provideIde();
         await service?.uninstallServer("ide-ruby");
-        await lumine.packages.deactivatePackage("ide-client");
+        await lumine.packages.deactivatePackage("ide");
         removeProject(managed.rootPath);
       }
     }, 600000);

@@ -275,7 +275,7 @@ if (require.main === module) {
     },
   };
   let adapter;
-  require("../../lib/main").consumeIdeClient({
+  require("../../lib/main").consumeIde({
     registerAdapter(value) {
       adapter = value;
       return { dispose() {} };

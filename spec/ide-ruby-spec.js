@@ -8,7 +8,7 @@ describe("ide-ruby adapter registration and configuration", () => {
   beforeEach(async () => {
     main = (await lumine.packages.activatePackage("ide-ruby")).mainModule;
     cleanup = jasmine.createSpy("unregister");
-    registration = main.consumeIdeClient({
+    registration = main.consumeIde({
       registerAdapter(value) {
         adapter = value;
         return { dispose: cleanup };
@@ -59,7 +59,7 @@ describe("ide-ruby adapter registration and configuration", () => {
     const server = require("../lib/server"),
       reportMissingServer = jasmine.createSpy("missing");
     spyOn(server, "resolveServer").and.resolveTo(null);
-    const disposable = main.consumeIdeClient({
+    const disposable = main.consumeIde({
       registerAdapter(value) {
         adapter = value;
         return { dispose() {} };

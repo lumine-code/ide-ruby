@@ -22,16 +22,16 @@ liveSuite("ide-ruby actual editor service routing", () => {
     lumine.config.set("ide-ruby.rubyPath", runtime);
     if (process.env.RUBY_LSP_SERVER_PATH)
       lumine.config.set("ide-ruby.serverPath", process.env.RUBY_LSP_SERVER_PATH);
-    for (const name of ["language-ruby", "ide-client", "ide-ruby"])
+    for (const name of ["language-ruby", "ide", "ide-ruby"])
       await lumine.packages.activatePackage(name);
-    service = lumine.packages.getActivePackage("ide-client").mainModule.provideIdeClient();
+    service = lumine.packages.getActivePackage("ide").mainModule.provideIde();
     lumine.project.setPaths([fixture.rootPath]);
     editor = await lumine.workspace.open(fixture.filePath);
     editor.setGrammar(lumine.grammars.grammarForScopeName("source.ruby"));
   }, 180000);
   afterEach(async () => {
     editor?.destroy();
-    for (const name of ["ide-ruby", "ide-client", "language-ruby"])
+    for (const name of ["ide-ruby", "ide", "language-ruby"])
       await lumine.packages.deactivatePackage(name);
     for (const key of ["rubyPath", "serverPath", "features.format"])
       lumine.config.unset(`ide-ruby.${key}`);
@@ -49,7 +49,7 @@ liveSuite("ide-ruby actual editor service routing", () => {
     );
   it("auto-registers, routes real completions and formatting, and honors feature switches", async () => {
     const session = await sessionFor(),
-      main = lumine.packages.getActivePackage("ide-client").mainModule;
+      main = lumine.packages.getActivePackage("ide").mainModule;
     expect(service.adaptersForEditor(editor).filter(({ id }) => id === "ide-ruby").length).toBe(1);
     expect(session.supports("textDocument/codeLens", editor)).toBe(false);
     expect(session.supports("textDocument/prepareCallHierarchy", editor)).toBe(false);

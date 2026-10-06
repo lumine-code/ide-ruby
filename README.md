@@ -2,7 +2,7 @@
 
 Provide Ruby language intelligence through Ruby LSP.
 
-The adapter connects [Shopify's Ruby LSP](https://shopify.github.io/ruby-lsp/) to ide-client. Ruby LSP uses the selected Ruby runtime and the project's locked gems; the editor supplies the language feature interfaces.
+The adapter connects [Shopify's Ruby LSP](https://shopify.github.io/ruby-lsp/) to ide. Ruby LSP uses the selected Ruby runtime and the project's locked gems; the editor supplies the language feature interfaces.
 
 ## Features
 
@@ -15,7 +15,7 @@ The adapter connects [Shopify's Ruby LSP](https://shopify.github.io/ruby-lsp/) t
 
 ## Installation
 
-Install ide-ruby, ide-client and language-ruby from the editor's Install tab. Install [Ruby 3.0 or newer](https://www.ruby-lang.org/en/downloads/) and make the project's runtime available on PATH, or set **Ruby Path** to its executable. On Windows, RubyInstaller with its Devkit provides the compiler needed by native gem dependencies.
+Install ide-ruby, ide and language-ruby from the editor's Install tab. Install [Ruby 3.0 or newer](https://www.ruby-lang.org/en/downloads/) and make the project's runtime available on PATH, or set **Ruby Path** to its executable. On Windows, RubyInstaller with its Devkit provides the compiler needed by native gem dependencies.
 
 Use **Manage Servers** to install Ruby LSP, or run `gem install ruby-lsp`. **Server Path** can select an existing Ruby `ruby-lsp` executable script; select the file without `.bat` or `.cmd`. An explicit script wins over the managed copy, followed by Ruby LSP installed in the selected runtime's gems.
 
