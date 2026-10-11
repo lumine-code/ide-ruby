@@ -2,11 +2,19 @@ const childProcess = require("node:child_process");
 const { resolveLiveRuntime } = require("./helpers/live-runtime");
 
 describe("ide-ruby live test prerequisites", () => {
+  it("does not probe or load a live server without explicit integration opt-in", () => {
+    const execute = spyOn(childProcess, "execFileSync");
+    expect(resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby" })).toBeNull();
+    expect(execute).not.toHaveBeenCalled();
+  });
+
   it("does not treat a Ruby executable without language tools as a live environment", () => {
     spyOn(childProcess, "execFileSync").and.callFake(() => {
       throw Object.assign(new Error("cannot load such file -- ruby-lsp"), { status: 20 });
     });
-    expect(resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby" })).toBeNull();
+    expect(
+      resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", LUMINE_TEST_LIVE_RUBY: "true" }),
+    ).toBeNull();
     expect(() =>
       resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", REQUIRE_RUBY_LSP: "1" }),
     ).toThrowError(/CI requires Ruby, Bundler, Ruby LSP/);
@@ -21,7 +29,9 @@ describe("ide-ruby live test prerequisites", () => {
         });
       return JSON.stringify({ gemPaths: ["default-gems"], bindir: "ruby-bin" });
     });
-    expect(resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby" })).toBeNull();
+    expect(
+      resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", LUMINE_TEST_LIVE_RUBY: "true" }),
+    ).toBeNull();
     expect(() =>
       resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", REQUIRE_RUBY_MANAGED_INSTALL: "1" }),
     ).toThrowError(/CI requires Ruby, Bundler, Ruby LSP/);
@@ -40,10 +50,14 @@ describe("ide-ruby live test prerequisites", () => {
       execute.and.callFake(() => {
         throw error;
       });
-      expect(() => resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby" })).toThrow(error);
+      expect(() =>
+        resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", LUMINE_TEST_LIVE_RUBY: "true" }),
+      ).toThrow(error);
     }
     execute.and.returnValue("invalid JSON");
-    expect(() => resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby" })).toThrowError(SyntaxError);
+    expect(() =>
+      resolveLiveRuntime({ RUBY_LSP_RUBY_PATH: "ruby", LUMINE_TEST_LIVE_RUBY: "true" }),
+    ).toThrowError(SyntaxError);
   });
 
   it("checks Bundler in the same private gem environment used by the fixtures", () => {

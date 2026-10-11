@@ -22,6 +22,13 @@ end
 puts JSON.generate({ gemPaths: Gem.path, bindir: RbConfig::CONFIG['bindir'] })`;
 
 exports.resolveLiveRuntime = (env = process.env) => {
+  // Finding installed tools must not opt a local spec run into launching them.
+  if (
+    !env.REQUIRE_RUBY_LSP &&
+    !env.REQUIRE_RUBY_MANAGED_INSTALL &&
+    env.LUMINE_TEST_LIVE_RUBY !== "true"
+  )
+    return null;
   const server = require("../../lib/server");
   const runtime = env.RUBY_LSP_RUBY_PATH || findOnPath("ruby", env);
   const required = env.REQUIRE_RUBY_LSP || env.REQUIRE_RUBY_MANAGED_INSTALL;
