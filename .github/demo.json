@@ -1,0 +1,17 @@
+{
+  "title": "ide-ruby",
+  "description": "Ruby LSP points out an unfinished method definition.",
+  "recordedOn": "2026-10-13",
+  "sourceRevision": "f483ca501ead294a4dd58387ba4518b0ffc095f0",
+  "mode": "normal",
+  "fontSettings": "default",
+  "themeSourceRevision": "6564a9e21899b5541e9c8f8006f9be6d6d72e6ad",
+  "images": [
+    {
+      "file": "demo.png",
+      "label": "Ruby LSP points out an unfinished method definition.",
+      "width": 1100,
+      "height": 490
+    }
+  ]
+}

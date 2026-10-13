@@ -13,6 +13,8 @@ The adapter connects [Shopify's Ruby LSP](https://shopify.github.io/ruby-lsp/) t
 - **Annotations**: semantic highlighting and optional hints for implicit rescue classes or shorthand hash values.
 - **Managed server**: verified Ruby LSP gem downloads and a private native gem installation for the selected Ruby ABI.
 
+![Ruby LSP points out an unfinished method definition.](.github/demo.png)
+
 ## Installation
 
 Install ide-ruby, ide and language-ruby from the editor's Install tab. Install [Ruby 3.0 or newer](https://www.ruby-lang.org/en/downloads/) and make the project's runtime available on PATH, or set **Ruby Path** to its executable. On Windows, RubyInstaller with its Devkit provides the compiler needed by native gem dependencies.
