@@ -1,17 +1,100 @@
 {
   "title": "ide-ruby",
   "description": "Ruby LSP points out an unfinished method definition.",
-  "recordedOn": "2026-10-13",
-  "sourceRevision": "f483ca501ead294a4dd58387ba4518b0ffc095f0",
+  "recordedOn": "2026-10-14",
+  "sourceRevision": "e02b21d038e37ccd08a8a51731dd6a858a9d0625",
+  "themeSourceRevision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
   "mode": "normal",
   "fontSettings": "default",
-  "themeSourceRevision": "6564a9e21899b5541e9c8f8006f9be6d6d72e6ad",
+  "scenario": "demo.js",
+  "recipeHash": "bd9c2ce940a884b74d0928dc699a23a345f33c5303c5b6af4ba368d2e7afe47a",
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "electron": "44.7.0",
+    "chrome": "152.0.7977.130",
+    "devicePixelRatio": 1,
+    "locale": "en-GB",
+    "fontFamily": "Fira Code, Menlo, DejaVu Sans Mono, Consolas, monospace",
+    "fontSize": 14,
+    "themes": ["one-day-syntax", "one-day-ui"]
+  },
+  "viewport": { "width": 1100, "height": 490 },
+  "cornerRadius": 10,
+  "sources": {
+    "editor": {
+      "revision": "d0b1751fffac65f10a405545e5f01cf7ad05c0bb",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "package": {
+      "revision": "e02b21d038e37ccd08a8a51731dd6a858a9d0625",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "ide-ruby": {
+      "revision": "e02b21d038e37ccd08a8a51731dd6a858a9d0625",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "documentation-view": {
+      "revision": "98f00040402867bdd5b046f46fb3cf31eecb17af",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "hover": {
+      "revision": "e126cdb80e5da8701b0e722be787b1cfedde9bed",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "ide": {
+      "revision": "0c1735fefa858a2834213bf6d52db91a3582b828",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "language-ruby": {
+      "revision": "26035831a3d8bcf77755afa56885ef10777a9788",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "linter": {
+      "revision": "9fc80e0296b3af2507e5ff04c7e043a813540245",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "linter-panel": {
+      "revision": "e380022d4df6542bcb57b4337b614c61c86f1d68",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "marker": {
+      "revision": "bb4fc8fec8c9d09fe59db9b0d70352ff33cde8f8",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "one-theme": {
+      "revision": "7fbd047a87ecf1367c896b19ff270cdc28d319f7",
+      "dirty": false,
+      "workingTreeHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "fixtures": [
+    {
+      "file": "ide-ruby/Gemfile",
+      "sha256": "e052fac36bfb8b1d144c51b1d5b9ce8b2de68f56206842e5c2512bcde2dd9179"
+    },
+    {
+      "file": "ide-ruby/signal.rb",
+      "sha256": "9c5941f8deb8b09a78fcd2125938f9914c5678c35fdabb54859677a56ea32956"
+    }
+  ],
   "images": [
     {
       "file": "demo.png",
       "label": "Ruby LSP points out an unfinished method definition.",
       "width": 1100,
-      "height": 490
+      "height": 490,
+      "sha256": "c47834d52abf5228cf584ec7e7400af39e285f9d40d450b8a34cc9c817827542"
     }
   ]
 }
