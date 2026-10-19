@@ -5,7 +5,7 @@ module.exports = {
     "language-ruby",
     "marker",
     "linter",
-    "linter-panel",
+    "diagnostics",
     "documentation-view",
     "hover",
     "ide",
