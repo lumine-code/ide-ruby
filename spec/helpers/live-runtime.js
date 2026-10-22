@@ -13,7 +13,7 @@ if (home = ENV['RUBY_LSP_GEM_HOME']) && !home.empty?
 end
 begin
   gem 'ruby-lsp', ENV['RUBY_LSP_VERSION'] if ENV['RUBY_LSP_VERSION']
-  gem 'rubocop', ENV.fetch('RUBY_RUBOCOP_VERSION', '1.91.0')
+  gem 'rubocop', ENV.fetch('RUBY_RUBOCOP_VERSION', '1.92.1')
   require 'bundler'; require 'ruby-lsp'; require 'rubocop'
 rescue LoadError => error
   warn error.message

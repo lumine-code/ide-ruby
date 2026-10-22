@@ -75,7 +75,7 @@ const createProject = () => {
   fs.writeFileSync(linkedPath, linkedText);
   fs.writeFileSync(
     path.join(rootPath, "Gemfile"),
-    `source "https://rubygems.org"\ngem "rubocop", "${process.env.RUBY_RUBOCOP_VERSION || "1.91.0"}"\ngem "project_dependency", path: "dependency"\n`,
+    `source "https://rubygems.org"\ngem "rubocop", "${process.env.RUBY_RUBOCOP_VERSION || "1.92.1"}"\ngem "project_dependency", path: "dependency"\n`,
   );
   fs.mkdirSync(path.join(rootPath, "dependency", "lib"), { recursive: true });
   fs.writeFileSync(

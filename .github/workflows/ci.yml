@@ -42,7 +42,7 @@ jobs:
       LUMINE_JASMINE_REPORTER: list
       LUMINE_TEST_PACKAGES: ide language-ruby
       RUBY_LSP_VERSION: 0.26.11
-      RUBY_RUBOCOP_VERSION: 1.91.0
+      RUBY_RUBOCOP_VERSION: 1.92.1
       REQUIRE_RUBY_LSP: 1
       REQUIRE_RUBY_MANAGED_INSTALL: 1
     steps:
@@ -68,8 +68,8 @@ jobs:
           cache-dependency-path: lumine/package-lock.json
       - uses: ruby/setup-ruby@v1.333.0
         with:
-          ruby-version: "3.4.11"
-          bundler: "2.6.9"
+          ruby-version: "4.0.8"
+          bundler: "4.0.23"
       - name: Install exact Ruby language tools
         run: |
           gem install ruby-lsp --version "$RUBY_LSP_VERSION" --no-document
